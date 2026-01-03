@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GAMES, Game } from './constants';
 import Header from './components/Header';
 import Home from './components/Home';
@@ -18,6 +18,28 @@ const App: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  // Trigger AdSense push when a game is loaded
+  useEffect(() => {
+    if (currentGame) {
+      try {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.error("Adsense push error:", e);
+      }
+    }
+  }, [currentGame]);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen().catch(err => {
+        console.error(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-900 text-white font-sans selection:bg-orange-500 selection:text-white">
       <Header onLogoClick={handleGoHome} />
@@ -27,9 +49,38 @@ const App: React.FC = () => {
           <Home onSelectGame={handlePlayGame} />
         ) : (
           <>
+            {/* 1. Mobile Experience Tip */}
+            <div className="text-center text-white bg-purple-800 p-4 rounded-lg mb-6 max-w-md mx-auto shadow-lg border border-purple-600 animate-pulse">
+              Tip: Rotate to landscape mode for better mobile experience! Perfect on phone or Chromebook.
+            </div>
+
+            {/* 2. Optimized Full Screen Button */}
+            <button 
+              onClick={toggleFullscreen} 
+              className="block mx-auto bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-xl text-xl mb-6 shadow-lg transform transition-all active:scale-95 hover:scale-105"
+            >
+              Play Full Screen (Press F - Ultimate Experience!)
+            </button>
+
+            {/* 3. Fullscreen Instruction Text */}
+            <div className="text-center text-white bg-blue-800 p-4 rounded-lg mb-6 max-w-lg mx-auto shadow-lg border border-blue-600">
+              Press F for fullscreen - No lag, full immersion on any device!
+            </div>
+
             <GamePlayer game={currentGame} onBack={handleGoHome} />
             
-            {/* Strategy Section - Enhanced SEO & User Guidance */}
+            {/* 4. Bottom AdSense Placement for RPM Boost */}
+            <div className="ad-bottom mt-8 text-center bg-gray-800/50 p-4 rounded-xl border border-gray-700">
+              <span className="text-xs text-gray-500 block mb-2 uppercase tracking-widest">Advertisement</span>
+              <ins className="adsbygoogle"
+                   style={{ display: 'block' }}
+                   data-ad-client="ca-pub-9774042341049510"
+                   data-ad-slot="your-ad-slot-id" // Suggested: add a specific slot ID for better tracking
+                   data-ad-format="auto"
+                   data-full-width-responsive="true"></ins>
+            </div>
+
+            {/* Strategy Section */}
             <div className="strategy mt-8 text-gray-300 p-4 bg-gray-800 rounded-lg border border-gray-700 leading-relaxed">
               <p className="mb-4">
                 A test of friendship or a recipe for disaster? <strong>Fireboy & Watergirl Unblocked 2025</strong> is the premier co-op puzzle adventure. 
